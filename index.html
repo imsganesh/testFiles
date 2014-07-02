@@ -1,0 +1,819 @@
+<!doctype html>
+<html>
+<head>
+  <title>vis.js Graph | Demo</title>
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <style type="text/css">
+    #graphContainer{
+      width: 99%;
+      height: 875px;
+      border: 1px solid lightgray;
+      display: table;
+      background-color:#f2f0f0;
+      margin: 0 5px 10px 5px;
+    }
+    #mygraph3 {
+      width: 100%;
+      height: inherit;
+      display: table-cell;
+      padding: 5px;
+    }
+    a{
+      cursor:pointer;
+    }
+  </style>
+  
+  <script type="text/javascript" src="vis-graph2d.js"></script>
+  <script type="text/javascript" src="jquery-1.6.4.min.js"></script>
+  <script type="text/javascript" src="jquery-ui-1.10.4.custom.js"></script>  
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>  
+</head>
+
+<body>
+  <input id="toggleLayout" style="display:none;" type="button" value="Toggle Layout" class="btn-warning" onMouseDown='toggleLayout();'>
+  <br><a onclick="SelectGraphData('2626_200', 'LR')">2626 - over 200 items (test data)</a>&nbsp;---&nbsp;<a onclick="SelectGraphData('2626_200', 'UD')">Top-Down</a>
+  
+  <div id="graphContainer" class="loaded">
+    <div id="mygraph3"></div>  
+  </div>  
+
+  <script type="text/javascript">
+    var currentNodes = null;
+    var currentEdges = null;
+    var nodes1041 = null;
+    var edges1041 = null;
+    var graph3 = null;
+    var dynamicNodes = null;
+    var container3 = null;
+    var options3 = null;
+    var canvas = null;
+    var context = null;
+
+    //Graph 3 - dynamic node click event
+    var loaded = true;
+    var loadedDiagram = "field1041";
+    
+    var DrawGraph = function(nodes, edges){
+      dynamicNodes = new vis.DataSet();
+      dynamicNodes.add(nodes);
+      dynamicEdges = new vis.DataSet();
+      dynamicEdges.add(edges);      
+      data3 = {
+        nodes: dynamicNodes,
+        edges: dynamicEdges
+      };
+      graph3 = new vis.Graph(container3, data3, options3);
+      //graph3.focusOnNode("field0001", 0.5);
+      //graph3.zoom(200);
+      BindEventHandlers();
+    }
+    
+    var toggleLayout = function(){
+      options3.hierarchicalLayout.enabled = !options3.hierarchicalLayout.enabled;
+      DrawGraph(currentNodes, currentEdgtes);
+    }
+        
+    var rootNode;
+    var SelectGraphData = function(graphName, graphDirection){
+      rootNode = 'field' + graphName;
+      switch (graphName){
+        case "2626_200":
+          currentNodes = nodes2626_200;
+          currentEdgtes = edges2626_200;
+          options3.hierarchicalLayout = {
+            direction: graphDirection
+          };
+          break;
+        default:
+          break;
+      }
+      DrawGraph(currentNodes, currentEdgtes);
+    }
+    
+    nodes2626_200 = [
+      {id: '219-0',    type:'field', view:'data', label:     '  219-0',    level:0, group: 'field_group', shape:'circle'},
+      {id: '350-0',    type:'field', view:'data', label:     '  350-0',    level:0, group: 'field_group', shape:'circle'},
+      {id: '957-0',    type:'field', view:'data', label:     '  957-0',    level:0, group: 'field_group', shape:'circle'},
+      {id: '580-0',    type:'field', view:'data', label:     '  580-0',    level:0, group: 'field_group', shape:'circle'},
+      {id: '221-0',    type:'field', view:'data', label:     '  221-0',    level:0, group: 'field_group', shape:'circle'},
+      {id: '352-0',    type:'field', view:'data', label:     '  352-0',    level:0, group: 'field_group', shape:'circle'},
+      {id: '581-0',    type:'field', view:'data', label:     '  581-0',    level:0, group: 'field_group', shape:'circle'},
+      {id: '966-0',    type:'field', view:'data', label:     '  966-0',    level:0, group: 'field_group', shape:'circle'},
+      {id: '967-0',    type:'field', view:'data', label:     '  967-0',    level:0, group: 'field_group', shape:'circle'},
+      {id: '968-0',    type:'field', view:'data', label:     '  968-0',    level:0, group: 'field_group', shape:'circle'},
+
+      {level:1, id: 'fieldTriggerRule0', type:'process', view:'data', ruletype: 'fieldTrigger', label: 'Rule 0', title:'test', group:'process_group'},
+      {level:1, id: 'fieldTriggerRule00', type:'process', view:'data', ruletype: 'fieldTrigger', label: 'Rule 0', title:'test', group:'process_group'},
+      {level:1, id: 'fieldTriggerRule000', type:'process', view:'data', ruletype: 'fieldTrigger', label: 'Rule 000', title:'test', group:'process_group'},
+    
+      {level:2, id: 'field0001', type:'field', view:'data', label: '    1   ', group: 'field_group', shape:'circle', color:{background:'#f80', border:'', highlight: {border:'#428acc'}}, fontColor:'white', fontSize:16, fontFace:'arial bold'},
+
+      {level:3, id: 'rule1', type:'process', view:'data', ruletype: 'fieldTrigger', label: 'Rule', title:'', group:'process_group'},
+      {level:3, id: 'rule2', type:'process', view:'data', ruletype: 'fieldTrigger', label: 'Rule', title:'', group:'process_group'},
+      {level:3, id: 'calculation1', type:'calc', view:'data', label: 'Calculation 1', title:'', group: 'calc_group'},
+      {level:3, id: 'calculation2', type:'calc', view:'data', label: 'Calculation 2', title:'', group: 'calc_group'},
+      {level:3, id: 'calculation3', type:'calc', view:'data', label: 'Calculation 3', title:'', group: 'calc_group'},
+
+      {id: '577', type:'field', view:'data', label: '  577',              level:4, group: 'field_group', shape:'circle'},
+      {id: '217', type:'field', view:'data', label: '  217',              level:4, group: 'field_group', shape:'circle'},
+      {id: '348', type:'field', view:'data', label: '  348',              level:4, group: 'field_group', shape:'circle'},
+      {id: '579', type:'field', view:'data', label: '  579',              level:4, group: 'field_group', shape:'circle'},
+      {id: '219', type:'field', view:'data', label: '  219',              level:4, group: 'field_group', shape:'circle'},
+      {id: '350', type:'field', view:'data', label: '  350',              level:4, group: 'field_group', shape:'circle'},
+      {id: '580', type:'field', view:'data', label: '  580',              level:4, group: 'field_group', shape:'circle'},
+      {id: '221', type:'field', view:'data', label: '  221',              level:4, group: 'field_group', shape:'circle'},
+      {id: '352', type:'field', view:'data', label: '  352',              level:4, group: 'field_group', shape:'circle'},
+      {id: '581', type:'field', view:'data', label: '  581',              level:4, group: 'field_group', shape:'circle'},
+      {id: '223', type:'field', view:'data', label: '  223',              level:4, group: 'field_group', shape:'circle'},
+      {id: '334', type:'field', view:'data', label: '  334',              level:4, group: 'field_group', shape:'circle'},
+      {id: '576', type:'field', view:'data', label: '  576',              level:4, group: 'field_group', shape:'circle'},
+      {id: '241', type:'field', view:'data', label: '  241',              level:4, group: 'field_group', shape:'circle'},
+      {id: '244', type:'field', view:'data', label: '  244',              level:4, group: 'field_group', shape:'circle'},
+      {id: '208', type:'field', view:'data', label: '  208',              level:4, group: 'field_group', shape:'circle'},
+      {id: '242', type:'field', view:'data', label: '  242',              level:4, group: 'field_group', shape:'circle'},
+      {id: '245', type:'field', view:'data', label: '  245',              level:4, group: 'field_group', shape:'circle'},
+      {id: '209', type:'field', view:'data', label: '  209',              level:4, group: 'field_group', shape:'circle'},
+      {id: '957', type:'field', view:'data', label: '  957',              level:4, group: 'field_group', shape:'circle'},
+      {id: '958', type:'field', view:'data', label: '  958',              level:4, group: 'field_group', shape:'circle'},
+      {id: '959', type:'field', view:'data', label: '  959',              level:4, group: 'field_group', shape:'circle'},
+      {id: '951', type:'field', view:'data', label: '  951',              level:4, group: 'field_group', shape:'circle'},
+      {id: '966', type:'field', view:'data', label: '  966',              level:4, group: 'field_group', shape:'circle'},
+      {id: '967', type:'field', view:'data', label: '  967',              level:4, group: 'field_group', shape:'circle'},
+      {id: '968', type:'field', view:'data', label: '  968',              level:4, group: 'field_group', shape:'circle'},
+      {id: '960', type:'field', view:'data', label: '  960',              level:4, group: 'field_group', shape:'circle'},
+      {id: '975', type:'field', view:'data', label: '  975',              level:4, group: 'field_group', shape:'circle'},
+      {id: '976', type:'field', view:'data', label: '  976',              level:4, group: 'field_group', shape:'circle'},
+      {id: '977', type:'field', view:'data', label: '  977',              level:4, group: 'field_group', shape:'circle'},
+      {id: '969', type:'field', view:'data', label: '  969',              level:4, group: 'field_group', shape:'circle'},
+      {id: '985', type:'field', view:'data', label: '  985',              level:4, group: 'field_group', shape:'circle'},
+      {id: '986', type:'field', view:'data', label: '  986',              level:4, group: 'field_group', shape:'circle'},
+      {id: '978', type:'field', view:'data', label: '  978',              level:4, group: 'field_group', shape:'circle'},
+      {id: '984', type:'field', view:'data', label: '  984',              level:4, group: 'field_group', shape:'circle'},
+      {id: '993', type:'field', view:'data', label: '  993',              level:4, group: 'field_group', shape:'circle'},
+      {id: '994', type:'field', view:'data', label: '  994',              level:4, group: 'field_group', shape:'circle'},
+      {id: '995', type:'field', view:'data', label: '  995',              level:4, group: 'field_group', shape:'circle'},
+      {id: '987', type:'field', view:'data', label: '  987',              level:4, group: 'field_group', shape:'circle'},
+      {id: '996', type:'field', view:'data', label: '  996',              level:4, group: 'field_group', shape:'circle'},
+      {id: '1762', type:'field', view:'data', label: ' 1762',             level:4, group: 'field_group', shape:'circle'},
+      {id: '1767', type:'field', view:'data', label: ' 1767',             level:4, group: 'field_group', shape:'circle'},
+      {id: '1772', type:'field', view:'data', label: ' 1772',             level:4, group: 'field_group', shape:'circle'},
+      {id: '1777', type:'field', view:'data', label: ' 1777',             level:4, group: 'field_group', shape:'circle'},
+      {id: '1608', type:'field', view:'data', label: ' 1608',             level:4, group: 'field_group', shape:'circle'},
+      {id: '1609', type:'field', view:'data', label: ' 1609',             level:4, group: 'field_group', shape:'circle'},
+      {id: '1602', type:'field', view:'data', label: ' 1602',             level:4, group: 'field_group', shape:'circle'},
+      {id: '1616', type:'field', view:'data', label: ' 1616',             level:4, group: 'field_group', shape:'circle'},
+      {id: '1617', type:'field', view:'data', label: ' 1617',             level:4, group: 'field_group', shape:'circle'},
+      {id: '1610', type:'field', view:'data', label: ' 1610',             level:4, group: 'field_group', shape:'circle'},
+      {id: '1003', type:'field', view:'data', label: ' 1003',             level:4, group: 'field_group', shape:'circle'},
+      {id: '1004', type:'field', view:'data', label: ' 1004',             level:4, group: 'field_group', shape:'circle'},
+      {id: '1002', type:'field', view:'data', label: ' 1002',             level:4, group: 'field_group', shape:'circle'},      
+      {id: '577-2',    type:'field', view:'data', label:     ' 577-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '242-2',    type:'field', view:'data', label:     ' 242-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '245-2',    type:'field', view:'data', label:     ' 245-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '209-2',    type:'field', view:'data', label:     ' 209-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '975-2',    type:'field', view:'data', label:     ' 975-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '976-2',    type:'field', view:'data', label:     ' 976-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '977-2',    type:'field', view:'data', label:     ' 977-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '969-2',    type:'field', view:'data', label:     ' 969-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '576-2',    type:'field', view:'data', label:     ' 576-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '241-2',    type:'field', view:'data', label:     ' 241-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '244-2',    type:'field', view:'data', label:     ' 244-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '208-2',    type:'field', view:'data', label:     ' 208-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '579-2',    type:'field', view:'data', label:     ' 579-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '219-2',    type:'field', view:'data', label:     ' 219-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '350-2',    type:'field', view:'data', label:     ' 350-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '957-2',    type:'field', view:'data', label:     ' 957-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '580-2',    type:'field', view:'data', label:     ' 580-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '221-2',    type:'field', view:'data', label:     ' 221-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '352-2',    type:'field', view:'data', label:     ' 352-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '581-2',    type:'field', view:'data', label:     ' 581-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '223-2',    type:'field', view:'data', label:     ' 223-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '354-2',    type:'field', view:'data', label:     ' 354-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '993-2',    type:'field', view:'data', label:     ' 993-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '994-2',    type:'field', view:'data', label:     ' 994-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '995-2',    type:'field', view:'data', label:     ' 995-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '987-2',    type:'field', view:'data', label:     ' 987-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '958-2',    type:'field', view:'data', label:     ' 958-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '959-2',    type:'field', view:'data', label:     ' 959-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '951-2',    type:'field', view:'data', label:     ' 951-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '578-2',    type:'field', view:'data', label:     ' 578-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '217-2',    type:'field', view:'data', label:     ' 217-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '348-2',    type:'field', view:'data', label:     ' 348-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '984-2',    type:'field', view:'data', label:     ' 984-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '985-2',    type:'field', view:'data', label:     ' 985-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '986-2',    type:'field', view:'data', label:     ' 986-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '978-2',    type:'field', view:'data', label:     ' 978-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '996-2',    type:'field', view:'data', label:     ' 996-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '966-2',    type:'field', view:'data', label:     ' 966-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '967-2',    type:'field', view:'data', label:     ' 967-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '968-2',    type:'field', view:'data', label:     ' 968-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '960-2',    type:'field', view:'data', label:     ' 960-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '1767-2',    type:'field', view:'data', label:    '1767-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '1608-2',    type:'field', view:'data', label:    '1608-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '1609-2',    type:'field', view:'data', label:    '1609-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '1602-2',    type:'field', view:'data', label:    '1602-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '1616-2',    type:'field', view:'data', label:    '1616-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '1610-2',    type:'field', view:'data', label:    '1610-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '1772-2',    type:'field', view:'data', label:    '1772-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '1777-2',    type:'field', view:'data', label:    '1777-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '1762-2',    type:'field', view:'data', label:    '1762-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '1002-2',    type:'field', view:'data', label:    '1002-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '1003-2',    type:'field', view:'data', label:    '1003-2',    level:4, group: 'field_group', shape:'circle'},
+      {id: '1004-2',    type:'field', view:'data', label:    '1004-2',    level:4, group: 'field_group', shape:'circle'},      
+      {id: '577-3',    type:'field', view:'data', label:     ' 577-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '242-3',    type:'field', view:'data', label:     ' 242-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '245-3',    type:'field', view:'data', label:     ' 245-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '209-3',    type:'field', view:'data', label:     ' 209-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '975-3',    type:'field', view:'data', label:     ' 975-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '976-3',    type:'field', view:'data', label:     ' 976-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '977-3',    type:'field', view:'data', label:     ' 977-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '969-3',    type:'field', view:'data', label:     ' 969-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '576-3',    type:'field', view:'data', label:     ' 576-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '241-3',    type:'field', view:'data', label:     ' 241-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '244-3',    type:'field', view:'data', label:     ' 244-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '208-3',    type:'field', view:'data', label:     ' 208-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '579-3',    type:'field', view:'data', label:     ' 579-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '219-3',    type:'field', view:'data', label:     ' 219-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '350-3',    type:'field', view:'data', label:     ' 350-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '957-3',    type:'field', view:'data', label:     ' 957-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '580-3',    type:'field', view:'data', label:     ' 580-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '221-3',    type:'field', view:'data', label:     ' 221-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '352-3',    type:'field', view:'data', label:     ' 352-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '581-3',    type:'field', view:'data', label:     ' 581-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '223-3',    type:'field', view:'data', label:     ' 223-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '354-3',    type:'field', view:'data', label:     ' 354-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '993-3',    type:'field', view:'data', label:     ' 993-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '994-3',    type:'field', view:'data', label:     ' 994-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '995-3',    type:'field', view:'data', label:     ' 995-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '987-3',    type:'field', view:'data', label:     ' 987-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '958-3',    type:'field', view:'data', label:     ' 958-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '959-3',    type:'field', view:'data', label:     ' 959-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '951-3',    type:'field', view:'data', label:     ' 951-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '578-3',    type:'field', view:'data', label:     ' 578-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '217-3',    type:'field', view:'data', label:     ' 217-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '348-3',    type:'field', view:'data', label:     ' 348-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '984-3',    type:'field', view:'data', label:     ' 984-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '985-3',    type:'field', view:'data', label:     ' 985-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '986-3',    type:'field', view:'data', label:     ' 986-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '978-3',    type:'field', view:'data', label:     ' 978-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '996-3',    type:'field', view:'data', label:     ' 996-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '966-3',    type:'field', view:'data', label:     ' 966-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '967-3',    type:'field', view:'data', label:     ' 967-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '968-3',    type:'field', view:'data', label:     ' 968-3',    level:4, group: 'field_group', shape:'circle'},
+      {id: '960-3',    type:'field', view:'data', label:     ' 960-3',    level:4, group: 'field_group', shape:'circle'},      
+      {id: '577-4',    type:'field', view:'data', label:     ' 577-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '242-4',    type:'field', view:'data', label:     ' 242-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '245-4',    type:'field', view:'data', label:     ' 245-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '209-4',    type:'field', view:'data', label:     ' 209-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '975-4',    type:'field', view:'data', label:     ' 975-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '976-4',    type:'field', view:'data', label:     ' 976-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '977-4',    type:'field', view:'data', label:     ' 977-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '969-4',    type:'field', view:'data', label:     ' 969-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '576-4',    type:'field', view:'data', label:     ' 576-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '241-4',    type:'field', view:'data', label:     ' 241-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '244-4',    type:'field', view:'data', label:     ' 244-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '208-4',    type:'field', view:'data', label:     ' 208-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '579-4',    type:'field', view:'data', label:     ' 579-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '219-4',    type:'field', view:'data', label:     ' 219-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '350-4',    type:'field', view:'data', label:     ' 350-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '957-4',    type:'field', view:'data', label:     ' 957-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '580-4',    type:'field', view:'data', label:     ' 580-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '221-4',    type:'field', view:'data', label:     ' 221-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '352-4',    type:'field', view:'data', label:     ' 352-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '581-4',    type:'field', view:'data', label:     ' 581-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '223-4',    type:'field', view:'data', label:     ' 223-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '354-4',    type:'field', view:'data', label:     ' 354-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '993-4',    type:'field', view:'data', label:     ' 993-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '994-4',    type:'field', view:'data', label:     ' 994-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '995-4',    type:'field', view:'data', label:     ' 995-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '987-4',    type:'field', view:'data', label:     ' 987-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '958-4',    type:'field', view:'data', label:     ' 958-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '959-4',    type:'field', view:'data', label:     ' 959-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '951-4',    type:'field', view:'data', label:     ' 951-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '578-4',    type:'field', view:'data', label:     ' 578-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '217-4',    type:'field', view:'data', label:     ' 217-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '348-4',    type:'field', view:'data', label:     ' 348-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '984-4',    type:'field', view:'data', label:     ' 984-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '985-4',    type:'field', view:'data', label:     ' 985-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '986-4',    type:'field', view:'data', label:     ' 986-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '978-4',    type:'field', view:'data', label:     ' 978-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '996-4',    type:'field', view:'data', label:     ' 996-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '966-4',    type:'field', view:'data', label:     ' 966-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '967-4',    type:'field', view:'data', label:     ' 967-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '968-4',    type:'field', view:'data', label:     ' 968-4',    level:4, group: 'field_group', shape:'circle'},
+      {id: '960-4',    type:'field', view:'data', label:     ' 960-4',    level:4, group: 'field_group', shape:'circle'},
+      
+      {id: '577-5',    type:'field', view:'data', label:     ' 577-5',    level:5, group: 'field_group', shape:'circle'},
+      {id: '242-5',    type:'field', view:'data', label:     ' 242-5',    level:5, group: 'field_group', shape:'circle'},
+      {id: '245-5',    type:'field', view:'data', label:     ' 245-5',    level:5, group: 'field_group', shape:'circle'},
+      {id: '209-5',    type:'field', view:'data', label:     ' 209-5',    level:5, group: 'field_group', shape:'circle'},
+      {id: '975-5',    type:'field', view:'data', label:     ' 975-5',    level:5, group: 'field_group', shape:'circle'},
+      {id: '976-5',    type:'field', view:'data', label:     ' 976-5',    level:5, group: 'field_group', shape:'circle'},
+      {id: '977-5',    type:'field', view:'data', label:     ' 977-5',    level:5, group: 'field_group', shape:'circle'},
+      {id: '969-5',    type:'field', view:'data', label:     ' 969-5',    level:5, group: 'field_group', shape:'circle'},
+      {id: '576-5',    type:'field', view:'data', label:     ' 576-5',    level:5, group: 'field_group', shape:'circle'},
+      {id: '241-5',    type:'field', view:'data', label:     ' 241-5',    level:5, group: 'field_group', shape:'circle'},
+      {id: '244-5',    type:'field', view:'data', label:     ' 244-5',    level:5, group: 'field_group', shape:'circle'},
+      {id: '208-5',    type:'field', view:'data', label:     ' 208-5',    level:5, group: 'field_group', shape:'circle'},
+      {id: '579-5',    type:'field', view:'data', label:     ' 579-5',    level:5, group: 'field_group', shape:'circle'},      
+      {id: '577-6',    type:'field', view:'data', label:     ' 577-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '242-6',    type:'field', view:'data', label:     ' 242-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '245-6',    type:'field', view:'data', label:     ' 245-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '209-6',    type:'field', view:'data', label:     ' 209-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '975-6',    type:'field', view:'data', label:     ' 975-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '976-6',    type:'field', view:'data', label:     ' 976-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '977-6',    type:'field', view:'data', label:     ' 977-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '969-6',    type:'field', view:'data', label:     ' 969-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '576-6',    type:'field', view:'data', label:     ' 576-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '241-6',    type:'field', view:'data', label:     ' 241-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '244-6',    type:'field', view:'data', label:     ' 244-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '208-6',    type:'field', view:'data', label:     ' 208-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '579-6',    type:'field', view:'data', label:     ' 579-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '219-6',    type:'field', view:'data', label:     ' 219-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '350-6',    type:'field', view:'data', label:     ' 350-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '957-6',    type:'field', view:'data', label:     ' 957-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '580-6',    type:'field', view:'data', label:     ' 580-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '221-6',    type:'field', view:'data', label:     ' 221-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '352-6',    type:'field', view:'data', label:     ' 352-6',    level:5, group: 'field_group', shape:'circle'},
+      {id: '581-6',    type:'field', view:'data', label:     ' 581-6',    level:5, group: 'field_group', shape:'circle'},
+
+      {id: '577-7',    type:'field', view:'data', label:     ' 577-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '242-7',    type:'field', view:'data', label:     ' 242-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '245-7',    type:'field', view:'data', label:     ' 245-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '209-7',    type:'field', view:'data', label:     ' 209-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '975-7',    type:'field', view:'data', label:     ' 975-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '976-7',    type:'field', view:'data', label:     ' 976-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '977-7',    type:'field', view:'data', label:     ' 977-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '969-7',    type:'field', view:'data', label:     ' 969-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '576-7',    type:'field', view:'data', label:     ' 576-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '241-7',    type:'field', view:'data', label:     ' 241-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '244-7',    type:'field', view:'data', label:     ' 244-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '208-7',    type:'field', view:'data', label:     ' 208-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '579-7',    type:'field', view:'data', label:     ' 579-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '219-7',    type:'field', view:'data', label:     ' 219-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '350-7',    type:'field', view:'data', label:     ' 350-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '957-7',    type:'field', view:'data', label:     ' 957-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '580-7',    type:'field', view:'data', label:     ' 580-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '221-7',    type:'field', view:'data', label:     ' 221-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '352-7',    type:'field', view:'data', label:     ' 352-7',    level:6, group: 'field_group', shape:'circle'},
+      {id: '581-7',    type:'field', view:'data', label:     ' 581-7',    level:6, group: 'field_group', shape:'circle'},
+      
+      {id: '577-8',    type:'field', view:'data', label:     ' 577-8',    level:7, group: 'field_group', shape:'circle'},
+      {id: '242-8',    type:'field', view:'data', label:     ' 242-8',    level:7, group: 'field_group', shape:'circle'},
+      {id: '245-8',    type:'field', view:'data', label:     ' 245-8',    level:7, group: 'field_group', shape:'circle'},
+      {id: '209-8',    type:'field', view:'data', label:     ' 209-8',    level:7, group: 'field_group', shape:'circle'},
+      {id: '975-8',    type:'field', view:'data', label:     ' 975-8',    level:7, group: 'field_group', shape:'circle'},
+      {id: '976-8',    type:'field', view:'data', label:     ' 976-8',    level:7, group: 'field_group', shape:'circle'},
+      {id: '977-8',    type:'field', view:'data', label:     ' 977-8',    level:7, group: 'field_group', shape:'circle'},
+      
+      {id: '242-9',    type:'field', view:'data', label:     ' 242-9',    level:8, group: 'field_group', shape:'circle'},
+    
+    ];
+    edges2626_200 = [
+      {from: '219-0', to: 'fieldTriggerRule0'},
+      {from: '350-0', to: 'fieldTriggerRule0'},
+      {from: '580-0', to: 'fieldTriggerRule0'},
+      {from: '352-0', to: 'fieldTriggerRule0'},
+      {from: '581-0', to: 'fieldTriggerRule0'},
+      {from: '221-0', to: 'fieldTriggerRule000'},
+      {from: '957-0', to: 'fieldTriggerRule000'},
+      {from: '966-0', to: 'fieldTriggerRule00'},
+      {from: '967-0', to: 'fieldTriggerRule00'},
+      {from: '968-0', to: 'fieldTriggerRule00'},  
+
+      {from: 'fieldTriggerRule0', to: 'field0001'},
+      {from: 'fieldTriggerRule00', to: 'field0001'},
+      {from: 'fieldTriggerRule000', to: 'field0001'},
+      
+      {from: 'field0001', to: 'rule1'},
+      {from: 'field0001', to: 'rule2'},
+      {from: 'field0001', to: 'calculation1'},
+      {from: 'field0001', to: 'calculation2'},
+      {from: 'field0001', to: 'calculation3'},
+
+      {from: 'rule1', to: '577'},
+      {from: 'rule1', to: '217'},
+      {from: 'rule1', to: '348'},
+      {from: 'rule1', to: '579'},
+      {from: 'rule1', to: '219'},
+      {from: 'rule1', to: '350'},
+      {from: 'rule1', to: '580'},
+      {from: 'rule1', to: '221'},
+      {from: 'rule1', to: '352'},
+      {from: 'rule1', to: '581'},
+      {from: 'rule1', to: '223'},
+      {from: 'rule1', to: '334'},
+      {from: 'rule1', to: '576'},
+      {from: 'rule1', to: '241'},
+      {from: 'rule1', to: '244'},
+      {from: 'rule1', to: '208'},
+      {from: 'rule1', to: '242'},
+      {from: 'rule1', to: '245'},
+      {from: 'rule1', to: '209'},
+      {from: 'rule1', to: '957'},
+      {from: 'rule1', to: '958'},
+      {from: 'rule1', to: '959'},
+      {from: 'rule1', to: '951'},
+      {from: 'rule1', to: '966'},
+      {from: 'rule1', to: '967'},
+      {from: 'rule1', to: '968'},
+      {from: 'rule1', to: '960'},
+      {from: 'rule1', to: '975'},
+      {from: 'rule1', to: '976'},
+      {from: 'rule1', to: '977'},
+      {from: 'rule1', to: '969'},
+      {from: 'rule1', to: '985'},
+      {from: 'rule1', to: '986'},
+      {from: 'rule1', to: '978'},
+      {from: 'rule1', to: '984'},
+      {from: 'rule1', to: '993'},
+      {from: 'rule1', to: '994'},
+      {from: 'rule1', to: '995'},
+      {from: 'rule1', to: '987'},
+      {from: 'rule1', to: '996'},
+      {from: 'rule1', to: '1762'},
+      {from: 'rule1', to: '1767'},
+      {from: 'rule1', to: '1772'},
+      {from: 'rule1', to: '1777'},
+      {from: 'rule1', to: '1608'},
+      {from: 'rule1', to: '1609'},
+      {from: 'rule1', to: '1602'},
+      {from: 'rule1', to: '1616'},
+      {from: 'rule1', to: '1617'},
+      {from: 'rule1', to: '1610'},
+      {from: 'rule1', to: '1003'},
+      {from: 'rule1', to: '1004'},
+      {from: 'rule1', to: '1002'},
+
+      {from: 'rule2', to: '577-2'},
+      {from: 'rule2', to: '242-2'},
+      {from: 'rule2', to: '245-2'},
+      {from: 'rule2', to: '209-2'},
+      {from: 'rule2', to: '975-2'},
+      {from: 'rule2', to: '976-2'},
+      {from: 'rule2', to: '977-2'},
+      {from: 'rule2', to: '969-2'},
+      {from: 'rule2', to: '576-2'},
+      {from: 'rule2', to: '241-2'},
+      {from: 'rule2', to: '244-2'},
+      {from: 'rule2', to: '208-2'},
+      {from: 'rule2', to: '579-2'},
+      {from: 'rule2', to: '219-2'},
+      {from: 'rule2', to: '350-2'},
+      {from: 'rule2', to: '957-2'},
+      {from: 'rule2', to: '580-2'},
+      {from: 'rule2', to: '221-2'},
+      {from: 'rule2', to: '352-2'},
+      {from: 'rule2', to: '581-2'},
+      {from: 'rule2', to: '223-2'},
+      {from: 'rule2', to: '354-2'},
+      {from: 'rule2', to: '993-2'},
+      {from: 'rule2', to: '994-2'},
+      {from: 'rule2', to: '995-2'},
+      {from: 'rule2', to: '987-2'},
+      {from: 'rule2', to: '958-2'},
+      {from: 'rule2', to: '959-2'},
+      {from: 'rule2', to: '951-2'},
+      {from: 'rule2', to: '578-2'},
+      {from: 'rule2', to: '217-2'},
+      {from: 'rule2', to: '348-2'},
+      {from: 'rule2', to: '984-2'},
+      {from: 'rule2', to: '985-2'},
+      {from: 'rule2', to: '986-2'},
+      {from: 'rule2', to: '978-2'},
+      {from: 'rule2', to: '996-2'},
+      {from: 'rule2', to: '966-2'},
+      {from: 'rule2', to: '967-2'},
+      {from: 'rule2', to: '968-2'},
+      {from: 'rule2', to: '960-2'},
+      {from: 'rule2', to: '1767-2'},
+      {from: 'rule2', to: '1608-2'},
+      {from: 'rule2', to: '1609-2'},
+      {from: 'rule2', to: '1602-2'},
+      {from: 'rule2', to: '1616-2'},
+      {from: 'rule2', to: '1610-2'},
+      {from: 'rule2', to: '1772-2'},
+      {from: 'rule2', to: '1777-2'},
+      {from: 'rule2', to: '1762-2'},
+      {from: 'rule2', to: '1002-2'},
+      {from: 'rule2', to: '1003-2'},
+      {from: 'rule2', to: '1004-2'},
+      
+      {from: 'calculation2', to: '577-3'},
+      {from: 'calculation2', to: '242-3'},
+      {from: 'calculation2', to: '245-3'},
+      {from: 'calculation2', to: '209-3'},
+      {from: 'calculation2', to: '975-3'},
+      {from: 'calculation2', to: '976-3'},
+      {from: 'calculation2', to: '977-3'},
+      {from: 'calculation2', to: '969-3'},
+      {from: 'calculation2', to: '576-3'},
+      {from: 'calculation2', to: '241-3'},
+      {from: 'calculation2', to: '244-3'},
+      {from: 'calculation2', to: '208-3'},
+      {from: 'calculation2', to: '579-3'},
+      {from: 'calculation2', to: '219-3'},
+      {from: 'calculation2', to: '350-3'},
+      {from: 'calculation2', to: '957-3'},
+      {from: 'calculation2', to: '580-3'},
+      {from: 'calculation2', to: '221-3'},
+      {from: 'calculation2', to: '352-3'},
+      {from: 'calculation2', to: '581-3'},
+      {from: 'calculation2', to: '223-3'},
+      {from: 'calculation2', to: '354-3'},
+      {from: 'calculation2', to: '993-3'},
+      {from: 'calculation2', to: '994-3'},
+      {from: 'calculation2', to: '995-3'},
+      {from: 'calculation2', to: '987-3'},
+      {from: 'calculation2', to: '958-3'},
+      {from: 'calculation2', to: '959-3'},
+      {from: 'calculation2', to: '951-3'},
+      {from: 'calculation2', to: '578-3'},
+      {from: 'calculation2', to: '217-3'},
+      {from: 'calculation2', to: '348-3'},
+      {from: 'calculation2', to: '984-3'},
+      {from: 'calculation2', to: '985-3'},
+      {from: 'calculation2', to: '986-3'},
+      {from: 'calculation2', to: '978-3'},
+      {from: 'calculation2', to: '996-3'},
+      {from: 'calculation2', to: '966-3'},
+      {from: 'calculation2', to: '967-3'},
+      {from: 'calculation2', to: '968-3'},
+      {from: 'calculation2', to: '960-3'},
+      
+      {from: 'calculation3', to: '577-4'},
+      {from: 'calculation3', to: '242-4'},
+      {from: 'calculation3', to: '245-4'},
+      {from: 'calculation3', to: '209-4'},
+      {from: 'calculation3', to: '975-4'},
+      {from: 'calculation3', to: '976-4'},
+      {from: 'calculation3', to: '977-4'},
+      {from: 'calculation3', to: '969-4'},
+      {from: 'calculation3', to: '576-4'},
+      {from: 'calculation3', to: '241-4'},
+      {from: 'calculation3', to: '244-4'},
+      {from: 'calculation3', to: '208-4'},
+      {from: 'calculation3', to: '579-4'},
+      {from: 'calculation3', to: '219-4'},
+      {from: 'calculation3', to: '350-4'},
+      {from: 'calculation3', to: '957-4'},
+      {from: 'calculation3', to: '580-4'},
+      {from: 'calculation3', to: '221-4'},
+      {from: 'calculation3', to: '352-4'},
+      {from: 'calculation3', to: '581-4'},
+      {from: 'calculation3', to: '223-4'},
+      {from: 'calculation3', to: '354-4'},
+      {from: 'calculation3', to: '993-4'},
+      {from: 'calculation3', to: '994-4'},
+      {from: 'calculation3', to: '995-4'},
+      {from: 'calculation3', to: '987-4'},
+      {from: 'calculation3', to: '958-4'},
+      {from: 'calculation3', to: '959-4'},
+      {from: 'calculation3', to: '951-4'},
+      {from: 'calculation3', to: '578-4'},
+      {from: 'calculation3', to: '217-4'},
+      {from: 'calculation3', to: '348-4'},
+      {from: 'calculation3', to: '984-4'},
+      {from: 'calculation3', to: '985-4'},
+      {from: 'calculation3', to: '986-4'},
+      {from: 'calculation3', to: '978-4'},
+      {from: 'calculation3', to: '996-4'},
+      {from: 'calculation3', to: '966-4'},
+      {from: 'calculation3', to: '967-4'},
+      {from: 'calculation3', to: '968-4'},
+      {from: 'calculation3', to: '960-4'}, 
+
+      {from: '352-4', to: '577-5'},
+      {from: '352-4', to: '242-5'},
+      {from: '352-4', to: '245-5'},
+      {from: '352-4', to: '209-5'},
+      {from: '352-4', to: '975-5'},
+      {from: '352-4', to: '976-5'},
+      {from: '352-4', to: '977-5'},
+      {from: '352-4', to: '969-5'},
+      {from: '352-4', to: '576-5'},
+      {from: '352-4', to: '241-5'},
+      {from: '352-4', to: '244-5'},
+      {from: '352-4', to: '208-5'},
+      {from: '352-4', to: '579-5'},
+
+      
+      {from: '219-4', to: '577-6'},
+      {from: '219-4', to: '242-6'},
+      {from: '219-4', to: '245-6'},
+      {from: '219-4', to: '209-6'},
+      {from: '219-4', to: '975-6'},
+      {from: '219-4', to: '976-6'},
+      {from: '219-4', to: '977-6'},
+      {from: '219-4', to: '969-6'},
+      {from: '219-4', to: '576-6'},
+      {from: '219-4', to: '241-6'},
+      {from: '219-4', to: '244-6'},
+      {from: '219-4', to: '208-6'},
+      {from: '219-4', to: '579-6'},
+      {from: '219-4', to: '219-6'},
+      {from: '219-4', to: '350-6'},
+      {from: '219-4', to: '957-6'},
+      {from: '219-4', to: '580-6'},
+      {from: '219-4', to: '221-6'},
+      {from: '219-4', to: '352-6'},
+      {from: '219-4', to: '581-6'},     
+
+      {from: '577-6', to: '577-7'},
+      {from: '242-6', to: '242-7'},
+      {from: '245-6', to: '245-7'},
+      {from: '209-6', to: '209-7'},
+      {from: '975-6', to: '975-7'},
+      {from: '976-6', to: '976-7'},
+      {from: '977-6', to: '977-7'},
+      {from: '581-6', to: '969-7'},
+      {from: '581-6', to: '576-7'},
+      {from: '209-6', to: '241-7'},
+      {from: '209-6', to: '244-7'},
+      {from: '209-6', to: '208-7'},
+      {from: '209-6', to: '579-7'},
+      {from: '245-6', to: '219-7'},
+      {from: '350-6', to: '350-7'},
+      {from: '957-6', to: '957-7'},
+      {from: '580-6', to: '580-7'},
+      {from: '221-6', to: '221-7'},
+      {from: '352-6', to: '352-7'},
+      {from: '581-6', to: '581-7'},  
+      
+      {from: '977-7', to: '577-8'},
+      {from: '977-7', to: '242-8'},
+      {from: '977-7', to: '245-8'},
+      {from: '977-7', to: '209-8'},
+      {from: '977-7', to: '975-8'},
+      {from: '977-7', to: '976-8'},
+      {from: '977-7', to: '977-8'},    
+      
+      {from: '242-8', to: '242-9'},
+
+    ];    
+
+    options3 = {
+      nodes: {
+        shape: 'box',
+        color: {
+          background: 'yellow',
+          border: '#37a'
+        },
+        fontColor:'#37a',
+        fontSize:11,
+        fontWeight:'bold',
+        fontFace:'arial'
+      },
+      edges: {
+        style: 'arrow',
+        width: 1.5,
+        arrowScaleFactor: 0.65,
+        color: {
+          color:'#b0c0d9',
+          highlight:'#9fafcf'
+        }
+      },
+      groups: {
+        field_group: {
+          color: {
+            background: '#f2f0f0',
+            border: '#c71',
+            highlight: {
+              border:'#428acc'
+            }
+          },
+          fontColor:'#c71',
+          fontSize:12
+        },
+        field_error_group: {
+          color: {
+            background: '#ed5a3a',
+            border: '#59a',
+            highlight: {
+              border:'#428acc'
+            }
+          },
+          fontColor:'#fff',
+          fontSize:12
+        },        
+        clickable_field_group: {
+          color: {
+            border: '#c71',
+            highlight: {
+              border:'#428acc'
+            }
+          },
+          fontColor:'red',
+          fontSize:10
+        },
+        hidden_field_group: {
+          color: {
+            background: '#f2f0f0',
+            border: '#f9f7f7'
+          },       
+          fontSize:12
+        },
+        action_group: {
+          color: {
+            background: '#3a9faf',
+            border: '#59a',
+            highlight: {
+              border:'#2149aa'
+            }
+          },
+          fontColor:'#fff'
+        },
+        action_error_group: {
+          color: {
+            background: '#e0e010',
+            border: '#59a',
+            highlight: {
+              border:'#428acc'
+            }
+          },
+          fontColor:'#fff'
+        },
+        calc_group: {
+          color: {
+            background: '#f2f0f0',
+            border: 'lightgray',
+            highlight: {
+              border:'#428acc'
+            }
+          },
+          fontColor:'#7ab'
+        },
+        process_group: {
+          shape: 'box',
+          color: {
+            background: '#f2f0f0',
+            border: '#59a',
+            highlight: {
+              border:'#428acc'
+            }
+          }
+        },
+        process_error_group: {
+          color: {
+            background: 'f2f0f0',
+            border: 'red',
+            highlight: {
+              border:'#428acc'
+            }
+          },
+          fontColor:'#37a',
+          fontFace: 'arial'
+        },        
+        process_image_group: {
+          shape: 'image'
+        },
+        filtered_group:{
+          color: {
+            highlight: {
+              border:'#428acc'
+            }
+          }
+        },
+        disabled_group: {
+          color:{
+            background: '#f0f0f0',
+            border: '#d0d0d0',
+          },
+          fontColor:'d2d0d0',
+          fontFace:'arial',
+          fontSize:11
+        }
+      },
+      tooltip: {
+        delay: 300,
+        fontColor: 'black',
+        fontSize: 12, // px
+        fontFace: 'verdana',
+        color: {
+          border: 'lightgray',
+          background: '#f2f0f0'
+        }
+      },
+      physics:{
+        hierarchicalRepulsion: {
+          nodeDistance: 50,
+          springLength: 50,
+          centralGravity: 0.5
+        }
+      },
+      dragNodes:false,
+      moveable: true,
+      configurePhysics: false
+    }
+    
+    container3 = document.getElementById('mygraph3');
+    SelectGraphData("2626_200", "LR");
+    //SetRuleTypeCount();
+
+  </script>
+
+</body>
+</html>
